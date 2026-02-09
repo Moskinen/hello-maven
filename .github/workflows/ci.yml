@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-# Required for pushing to GHCR
 permissions:
   contents: read
   packages: write
@@ -43,7 +42,9 @@ jobs:
     - name: Build and push Docker image
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
-        docker build -t ghcr.io/moskinen/hello-maven:latest .
-        docker build -t ghcr.io/moskinen/hello-maven:latest .{{ github.sha }} .
-        docker push ghcr.io/moskinen/hello-maven:latest .
-        docker push ghcr.io/moskinen/hello-maven:latest .{{ github.sha }}
+        docker build \
+          -t ghcr.io/moskinen/hello-maven:latest \
+          -t ghcr.io/moskinen/hello-maven:${{ github.sha }} \
+          .
+        docker push ghcr.io/moskinen/hello-maven:latest
+        docker push ghcr.io/moskinen/hello-maven:${{ github.sha }}
